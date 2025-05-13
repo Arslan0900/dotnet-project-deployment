@@ -1,0 +1,28 @@
+name: Dotnet CI/CD with Docker
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        working-directory: /home/ubuntu/dotnetcore-docs-hello-world
+        run: |
+          docker build -f Dockerfile.linux -t dotnetcore-docs-hello-world-linux .
+
+      - name: Remove existing container if exists
+        run: |
+          docker ps -a -q -f name=dotnetcore-docs-hello-world-linux-container | grep -q . && docker rm -f dotnetcore-docs-hello-world-linux-container || echo "No existing container to remove"
+
+      - name: Run Docker container
+        run: |
+          docker run -d -p 8080:8080 --name dotnetcore-docs-hello-world-linux-container dotnetcore-docs-hello-world-linux
