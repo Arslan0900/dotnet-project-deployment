@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        working-directory: /home/ubuntu/dotnetcore-docs-hello-world
         run: |
+          cd /home/ubuntu/actions-runner/_work/dotnet-project-deployment/dotnet-project-deployment
           docker build -f Dockerfile.linux -t dotnetcore-docs-hello-world-linux .
 
       - name: Remove existing container if exists
@@ -25,4 +25,5 @@ jobs:
 
       - name: Run Docker container
         run: |
+          cd /home/ubuntu/actions-runner/_work/dotnet-project-deployment/dotnet-project-deployment
           docker run -d -p 8080:8080 --name dotnetcore-docs-hello-world-linux-container dotnetcore-docs-hello-world-linux
